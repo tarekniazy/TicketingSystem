@@ -15,6 +15,13 @@ public class UserRepository : IUserRepository
         _users = context.Users;
     }
 
+    public async Task<List<User>> GetAll()
+    {
+        return await _users
+            .Find(_ => true)
+            .ToListAsync();
+    }
+
     public async Task<User?> GetById(
         string id)
     {

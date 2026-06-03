@@ -65,4 +65,24 @@ public class TicketsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPut("{id}/status")]
+    public async Task<IActionResult> UpdateStatus(
+        string id,
+        UpdateTicketStatusRequest request)
+    {
+        await _service.ChangeStatus(request);
+
+        return NoContent();
+    }
+
+    [HttpPut("{id}/assign")]
+    public async Task<IActionResult> Assign(
+        string id,
+        AssignTicketRequest request)
+    {
+        await _service.Assign(request);
+
+        return NoContent();
+    }
 }

@@ -4,6 +4,8 @@ namespace TicketingSystem.Application.Interfaces.Repositories;
 
 public interface IUserRepository
 {
+    Task<List<User>> GetAll();
+
     Task<User?> GetById(string id);
 
     Task<User?> GetByEmail(string email);

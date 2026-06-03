@@ -18,9 +18,15 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> SignUp(
         SignUpRequest request)
     {
-        await _service.Register(request);
-
-        return Ok();
+        try
+        {
+            await _service.Register(request);
+            return Ok();
+        }
+        catch (Exception ex) when (ex.Message == "Email already exists.")
+        {
+            return Conflict(new { message = ex.Message });
+        }
     }
 
     [HttpPost("signin")]
@@ -28,9 +34,14 @@ public class AuthController : ControllerBase
         SignIn(
             SignInRequest request)
     {
-        var response =
-            await _service.Login(request);
-
-        return Ok(response);
+        try
+        {
+            var response = await _service.Login(request);
+            return Ok(response);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized(new { message = "Invalid email or password." });
+        }
     }
 }
