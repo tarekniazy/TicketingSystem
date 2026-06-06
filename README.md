@@ -7,22 +7,22 @@ A full-stack ticketing application built with ASP.NET Core 8 and React 19. Users
 ## Tech Stack
 
 **Backend**
-- ASP.NET Core 8 — REST API
-- MongoDB — document database
-- JWT Bearer — stateless authentication
-- Auth0 — SSO / OpenID Connect
-- BCrypt.Net-Next — password hashing
-- FluentValidation — request validation
-- Swagger / Swashbuckle — API docs
+- ASP.NET Core 8 REST API
+- MongoDB document database
+- JWT Bearer stateless authentication
+- Auth0 SSO / OpenID Connect
+- BCrypt.Net-Next password hashing
+- FluentValidation request validation
+- Swagger / Swashbuckle API docs
 
 **Frontend**
-- React 19 + TypeScript — UI
-- Vite — build tool & dev server
-- React Router 7 — client-side routing
-- Material UI 9 — component library
-- Auth0 React SDK — SSO integration
-- React Hook Form — form state
-- Axios — HTTP client
+- React 19 + TypeScript UI
+- Vite build tool & dev server
+- React Router 7 client-side routing
+- Material UI 9 component library
+- Auth0 React SDK SSO integration
+- React Hook Form form state
+- Axios HTTP client
 
 ---
 
@@ -30,7 +30,7 @@ A full-stack ticketing application built with ASP.NET Core 8 and React 19. Users
 
 ```
 TicketingSystem/
-├── backend/                    # ASP.NET Core API
+├── backend/                   # ASP.NET Core API
 │   ├── Api/
 │   │   └── Controllers/        # AuthController, TicketsController, UsersController
 │   ├── Application/
@@ -63,7 +63,7 @@ TicketingSystem/
 
 ### Architecture
 
-The backend follows Clean Architecture — dependencies point inward from Infrastructure → Application → Domain. Controllers sit in the `Api` layer and depend only on Application services. Infrastructure implementations (MongoDB, JWT, Auth0) are registered via DI and hidden behind interfaces.
+The backend follows Clean Architecture dependencies point inward from Infrastructure → Application → Domain. Controllers sit in the `Api` layer and depend only on Application services. Infrastructure implementations (MongoDB, JWT, Auth0) are registered via DI and hidden behind interfaces.
 
 ---
 
@@ -71,7 +71,7 @@ The backend follows Clean Architecture — dependencies point inward from Infras
 
 ### Authentication
 - **Email / password sign-up and sign-in** with bcrypt hashing and JWT issuance
-- **Auth0 SSO** — "Continue with SSO" button on the login page redirects through Auth0. On callback the frontend sends the Auth0 ID token to the backend, which validates it via OpenID Connect JWKS, auto-provisions the user if they're new, and returns an app JWT
+- **Auth0 SSO** "Continue with SSO" button on the login page redirects through Auth0. On callback the frontend sends the Auth0 ID token to the backend, which validates it via OpenID Connect JWKS, auto-provisions the user if they're new, and returns an app JWT
 - `PasswordHash` is nullable so SSO users are stored without a password
 - Protected routes redirect unauthenticated users to `/login`
 
@@ -142,7 +142,7 @@ In Auth0, add `http://localhost:5173/auth/callback` as an **Allowed Callback URL
 
 ## API Endpoints
 
-### Auth — `/api/auth`
+### Auth `/api/auth`
 
 | Method | Path | Description |
 |--------|------|-------------|
@@ -150,7 +150,7 @@ In Auth0, add `http://localhost:5173/auth/callback` as an **Allowed Callback URL
 | `POST` | `/auth/signin` | Sign in with email + password → JWT |
 | `POST` | `/auth/auth0` | Exchange Auth0 ID token → app JWT |
 
-### Tickets — `/api/tickets`
+### Tickets `/api/tickets`
 
 | Method | Path | Description |
 |--------|------|-------------|
@@ -160,7 +160,7 @@ In Auth0, add `http://localhost:5173/auth/callback` as an **Allowed Callback URL
 | `PUT` | `/tickets/{id}/status` | Update ticket status |
 | `PUT` | `/tickets/{id}/assign` | Assign ticket to a user |
 
-### Users — `/api/users`
+### Users `/api/users`
 
 | Method | Path | Description |
 |--------|------|-------------|
