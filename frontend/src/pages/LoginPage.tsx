@@ -8,15 +8,19 @@ import {
   Typography,
   Alert,
   CircularProgress,
+  Divider,
 } from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import { signIn } from '../api/authApi';
 import { useAuth } from '../hooks/useAuth';
 import type { LoginRequest } from '../models/LoginRequest';
 
 const LoginPage: React.FC = () => {
   const { login } = useAuth();
+  const { loginWithRedirect } = useAuth0();
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -62,6 +66,20 @@ const LoginPage: React.FC = () => {
               {error}
             </Alert>
           )}
+
+          <Button
+            variant="outlined"
+            fullWidth
+            startIcon={<LockOutlinedIcon />}
+            onClick={() =>
+              loginWithRedirect({ appState: { returnTo: '/auth/callback' } })
+            }
+            sx={{ mb: 2 }}
+          >
+            Continue with SSO
+          </Button>
+
+          <Divider sx={{ mb: 2 }}>or</Divider>
 
           <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
             <TextField

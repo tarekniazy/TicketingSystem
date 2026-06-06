@@ -3,6 +3,7 @@ using TicketingSystem.Application.Interfaces.Repositories;
 using TicketingSystem.Application.Interfaces.Security;
 using TicketingSystem.Infrastructure.Repositories;
 using TicketingSystem.Infrastructure.Security;
+using Microsoft.Extensions.Configuration;
 
 namespace TicketingSystem.Infrastructure;
 
@@ -27,6 +28,10 @@ public static class DependencyInjection
         services.AddScoped<
             IJwtProvider,
             JwtProvider>();
+
+        services.AddScoped<
+            IAuth0Provider,
+            Auth0Provider>();
 
         return services;
     }

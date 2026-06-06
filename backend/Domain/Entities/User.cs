@@ -10,7 +10,7 @@ public class User
 
     public string Email { get; private set; }
 
-    public string PasswordHash { get; private set; }
+    public string? PasswordHash { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
 
@@ -20,7 +20,6 @@ public class User
         FirstName = string.Empty;
         LastName = string.Empty;
         Email = string.Empty;
-        PasswordHash = string.Empty;
     }
 
     public User(
@@ -30,16 +29,26 @@ public class User
         string passwordHash)
     {
         Id = Guid.NewGuid().ToString();
-
         FirstName = firstName.Trim();
-
         LastName = lastName.Trim();
-
         Email = email.Trim().ToLowerInvariant();
-
         PasswordHash = passwordHash;
-
         CreatedAt = DateTime.UtcNow;
+    }
+
+    public static User CreateFromSso(
+        string firstName,
+        string lastName,
+        string email)
+    {
+        return new User
+        {
+            Id = Guid.NewGuid().ToString(),
+            FirstName = firstName.Trim(),
+            LastName = lastName.Trim(),
+            Email = email.Trim().ToLowerInvariant(),
+            CreatedAt = DateTime.UtcNow
+        };
     }
 
     public string FullName =>

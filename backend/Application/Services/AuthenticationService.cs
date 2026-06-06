@@ -8,11 +8,13 @@ namespace TicketingSystem.Application.Services;
 public class AuthenticationService(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
-    IJwtProvider jwtProvider)
+    IJwtProvider jwtProvider,
+    IAuth0Provider auth0Provider)
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IPasswordHasher _passwordHasher = passwordHasher;
     private readonly IJwtProvider _jwtProvider = jwtProvider;
+    private readonly IAuth0Provider _auth0Provider = auth0Provider;
 
     public async Task Register(
         SignUpRequest request)
@@ -44,7 +46,7 @@ public class AuthenticationService(
             await _userRepository
                 .GetByEmail(request.Email);
 
-        if (user == null)
+        if (user == null || user.PasswordHash == null)
         {
             throw new UnauthorizedAccessException();
         }
@@ -54,6 +56,36 @@ public class AuthenticationService(
                 user.PasswordHash))
         {
             throw new UnauthorizedAccessException();
+        }
+
+        return new AuthResponse(
+            _jwtProvider.Generate(user));
+    }
+
+    public async Task<AuthResponse> Auth0SignIn(
+        Auth0SignInRequest request)
+    {
+        var userInfo =
+            await _auth0Provider
+                .ValidateIdToken(request.IdToken);
+
+        if (userInfo == null)
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        var user =
+            await _userRepository
+                .GetByEmail(userInfo.Email);
+
+        if (user == null)
+        {
+            user = User.CreateFromSso(
+                userInfo.FirstName,
+                userInfo.LastName,
+                userInfo.Email);
+
+            await _userRepository.Create(user);
         }
 
         return new AuthResponse(

@@ -8,3 +8,6 @@ export const signIn = (data: LoginRequest) =>
 
 export const signUp = (data: SignupRequest) =>
   axiosClient.post('/auth/signup', data);
+
+export const auth0SignIn = (idToken: string) =>
+  axiosClient.post<AuthResponse>('/auth/auth0', { idToken });

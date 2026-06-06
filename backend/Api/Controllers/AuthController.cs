@@ -44,4 +44,24 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Invalid email or password." });
         }
     }
+
+    [HttpPost("auth0")]
+    public async Task<ActionResult<AuthResponse>>
+        Auth0SignIn(
+            Auth0SignInRequest request)
+    {
+        try
+        {
+            var response = await _service.Auth0SignIn(request);
+            return Ok(response);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized(new { message = "Invalid Auth0 token." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.GetType().Name, message = ex.Message });
+        }
+    }
 }
