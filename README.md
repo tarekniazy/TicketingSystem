@@ -132,8 +132,8 @@ The dev server starts on `http://localhost:5173` and proxies `/api` calls to the
 **Environment variables** (`.env`):
 
 ```env
-VITE_AUTH0_DOMAIN=your-tenant.us.auth0.com
-VITE_AUTH0_CLIENT_ID=your-client-id
+VITE_AUTH0_DOMAIN=tenant.us.auth0.com
+VITE_AUTH0_CLIENT_ID=client-id
 ```
 
 In Auth0, add `http://localhost:5173/auth/callback` as an **Allowed Callback URL** and `http://localhost:5173` as an **Allowed Logout URL** and **Allowed Web Origin**.
