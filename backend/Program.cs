@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenLocalhost(8080);
+    options.ListenAnyIP(8080);
 });
 
 builder.Services.AddCors(options =>
