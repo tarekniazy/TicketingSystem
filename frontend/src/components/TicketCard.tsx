@@ -21,7 +21,7 @@ interface Props {
 const TicketCard: React.FC<Props> = ({ ticket, onView, onEdit }) => (
   <Card variant="outlined" sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
     <CardContent sx={{ flexGrow: 1, padding: '24px' }}>
-      <Typography variant="subtitle1" fontWeight="bold" noWrap sx={{ marginBottom: '16px' }}>
+      <Typography variant="subtitle1" noWrap sx={{ fontWeight: 'bold', marginBottom: '16px' }}>
         {ticket.title}
       </Typography>
       <Box sx={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>

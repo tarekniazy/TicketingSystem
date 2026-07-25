@@ -1,13 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { auth0SignIn } from '../api/authApi';
-import { useAuth } from '../hooks/useAuth';
+import { AuthContext } from '../context/AuthContext';
 
 const Auth0CallbackPage: React.FC = () => {
   const { isAuthenticated, isLoading, error, getIdTokenClaims } = useAuth0();
-  const { login } = useAuth();
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const hasExchanged = useRef(false);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
 import {
   Box,
   AppBar,
@@ -18,7 +18,6 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { getAllTickets, getTicketsForUser } from '../api/ticketApi';
 import { type Ticket, TicketCategory, TicketPriority, TicketStatus, categoryLabel, priorityLabel, statusLabel } from '../models/Ticket';
@@ -26,13 +25,14 @@ import TicketCard from '../components/TicketCard';
 import CreateTicketDialog from '../components/dialogs/CreateTicketDialog';
 import EditTicketDialog from '../components/dialogs/EditTicketDialog';
 import TicketDetailsDialog from '../components/dialogs/TicketDetailsDialog';
+import { AuthContext } from '../context/AuthContext';
 
 const PRIORITY_OPTIONS = [0, ...Object.values(TicketPriority).filter((v): v is number => typeof v === 'number')];
 const STATUS_OPTIONS = [0, ...Object.values(TicketStatus).filter((v): v is number => typeof v === 'number')];
 const CATEGORY_OPTIONS = [0, ...Object.values(TicketCategory).filter((v): v is number => typeof v === 'number')];
 
 const HomePage: React.FC = () => {
-  const { userId, logout } = useAuth();
+  const { userId, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [tab, setTab] = useState(0);
@@ -89,7 +89,7 @@ const HomePage: React.FC = () => {
   });
 
   return (
-    <Box minHeight="100vh" bgcolor="grey.100">
+    <Box sx={{ minHeight: '100vh', bgcolor: 'grey.100' }}>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
@@ -171,7 +171,7 @@ const HomePage: React.FC = () => {
         </Box>
 
         {loading && (
-          <Box display="flex" justifyContent="center" py={6}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
             <CircularProgress />
           </Box>
         )}
@@ -179,7 +179,7 @@ const HomePage: React.FC = () => {
         {error && <Alert severity="error">{error}</Alert>}
 
         {!loading && !error && filtered.length === 0 && (
-          <Typography color="text.secondary" textAlign="center" py={6}>
+          <Typography color="text.secondary" sx={{ textAlign: 'center', py: 6 }}>
             No tickets found.
           </Typography>
         )}

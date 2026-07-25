@@ -55,15 +55,17 @@ const SignupPage: React.FC = () => {
 
   return (
     <Box
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      minHeight="100vh"
-      bgcolor="grey.100"
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        bgcolor: 'grey.100',
+      }}
     >
       <Card sx={{ width: 440, p: 2 }}>
         <CardContent>
-          <Typography variant="h5" fontWeight="bold" mb={3} textAlign="center">
+          <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3, textAlign: 'center' }}>
             Create Account
           </Typography>
 
@@ -74,12 +76,15 @@ const SignupPage: React.FC = () => {
           )}
 
           <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-            <Box display="flex" gap={1}>
+            <Box sx={{ display: 'flex', gap: 1 }}>
               <TextField
                 label="First Name"
                 fullWidth
                 margin="normal"
-                {...register('firstName', { required: 'First name is required' })}
+                {...register('firstName', {
+                  required: 'First name is required',
+                  maxLength: { value: 50, message: 'First name must be at most 50 characters' },
+                })}
                 error={!!errors.firstName}
                 helperText={errors.firstName?.message}
               />
@@ -87,7 +92,10 @@ const SignupPage: React.FC = () => {
                 label="Last Name"
                 fullWidth
                 margin="normal"
-                {...register('lastName', { required: 'Last name is required' })}
+                {...register('lastName', {
+                  required: 'Last name is required',
+                  maxLength: { value: 50, message: 'Last name must be at most 50 characters' },
+                })}
                 error={!!errors.lastName}
                 helperText={errors.lastName?.message}
               />
@@ -101,6 +109,7 @@ const SignupPage: React.FC = () => {
               {...register('email', {
                 required: 'Email is required',
                 pattern: { value: /^\S+@\S+\.\S+$/, message: 'Invalid email address' },
+                maxLength: { value: 255, message: 'Email must be at most 255 characters' },
               })}
               error={!!errors.email}
               helperText={errors.email?.message}
@@ -111,7 +120,15 @@ const SignupPage: React.FC = () => {
               type="password"
               fullWidth
               margin="normal"
-              {...register('password', { required: 'Password is required' })}
+              {...register('password', {
+                required: 'Password is required',
+                minLength: { value: 8, message: 'Password must be at least 8 characters' },
+                pattern: {
+                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).+$/,
+                  message:
+                    'Password must contain an uppercase letter, a lowercase letter, a number, and a special character',
+                },
+              })}
               error={!!errors.password}
               helperText={errors.password?.message}
             />
@@ -139,7 +156,7 @@ const SignupPage: React.FC = () => {
               {loading ? <CircularProgress size={24} /> : 'Sign Up'}
             </Button>
 
-            <Typography variant="body2" textAlign="center" mt={2}>
+            <Typography variant="body2" sx={{ textAlign: 'center', mt: 2 }}>
               Already have an account?{' '}
               <Link to="/login" style={{ textDecoration: 'none', color: 'inherit', fontWeight: 'bold' }}>
                 Sign In

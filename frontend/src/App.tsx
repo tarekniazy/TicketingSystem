@@ -1,11 +1,10 @@
-import { BrowserRouter, useNavigate } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { CssBaseline } from '@mui/material';
 import { AuthProvider } from './context/AuthContext';
 import AppRoutes from './routes/AppRoutes';
 
 function Auth0ProviderWithNavigate({ children }: { children: React.ReactNode }) {
-  const navigate = useNavigate();
 
   return (
     <Auth0Provider
@@ -13,10 +12,6 @@ function Auth0ProviderWithNavigate({ children }: { children: React.ReactNode }) 
       clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
       authorizationParams={{
         redirect_uri: `${window.location.origin}/auth/callback`,
-        scope: 'openid profile email',
-      }}
-      onRedirectCallback={(appState) => {
-        navigate(appState?.returnTo ?? '/auth/callback');
       }}
     >
       {children}
@@ -26,7 +21,7 @@ function Auth0ProviderWithNavigate({ children }: { children: React.ReactNode }) 
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter> 
       <Auth0ProviderWithNavigate>
         <AuthProvider>
           <CssBaseline />

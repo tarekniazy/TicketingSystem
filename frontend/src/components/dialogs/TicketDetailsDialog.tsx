@@ -28,7 +28,7 @@ interface Props {
 }
 
 const Row: React.FC<{ label: string; value: React.ReactNode }> = ({ label, value }) => (
-  <Box display="flex" alignItems="flex-start" gap={2} py={1}>
+  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, py: 1 }}>
     <Typography variant="body2" color="text.secondary" sx={{ minWidth: 120, fontWeight: 600 }}>
       {label}
     </Typography>

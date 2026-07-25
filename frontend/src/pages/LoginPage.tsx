@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Box,
   Card,
@@ -15,11 +15,11 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { signIn } from '../api/authApi';
-import { useAuth } from '../hooks/useAuth';
 import type { LoginRequest } from '../models/LoginRequest';
+import { AuthContext } from '../context/AuthContext';
 
 const LoginPage: React.FC = () => {
-  const { login } = useAuth();
+  const { login } = useContext(AuthContext);
   const { loginWithRedirect } = useAuth0();
   const navigate = useNavigate();
   const [error, setError] = useState('');

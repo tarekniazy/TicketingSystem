@@ -8,18 +8,18 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using TicketingSystem.Application.Validators;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder();
 
-var allowedOrigins = builder.Configuration["Cors:AllowedOrigins"]?.Split(',')
-    ?? new[] { "http://localhost:5173" };
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenLocalhost(8080);
+});
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
-        policy.WithOrigins(allowedOrigins)
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.AllowAnyOrigin();
     });
 });
 
