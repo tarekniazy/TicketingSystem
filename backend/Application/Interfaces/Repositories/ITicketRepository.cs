@@ -1,4 +1,6 @@
-﻿using TicketingSystem.Domain.Entities;
+﻿using TicketingSystem.Application.DTOs.Common;
+using TicketingSystem.Application.DTOs.Tickets;
+using TicketingSystem.Domain.Entities;
 
 namespace TicketingSystem.Application.Interfaces.Repositories;
 
@@ -8,7 +10,13 @@ public interface ITicketRepository
 
     Task<Ticket?> GetById(string ticketId);
 
-    Task<List<Ticket>> GetAllTicketsWithUserId(string userId);
+    Task<PagedResult<Ticket>> GetAllTicketsWithUserId(
+        string userId,
+        TicketQueryParameters query);
+
+    Task<PagedResult<Ticket>> GetAllTicketsCreatedByUser(
+        string userId,
+        TicketQueryParameters query);
 
     Task Create(Ticket ticket);
 

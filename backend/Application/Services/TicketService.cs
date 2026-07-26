@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using TicketingSystem.Application.DTOs.Common;
 using TicketingSystem.Application.DTOs.Tickets;
 using TicketingSystem.Application.Interfaces.Repositories;
 using TicketingSystem.Domain.Entities;
@@ -31,9 +32,22 @@ public class TicketService(
         return await _ticketRepository.GetAll();
     }
 
-    public async Task<List<Ticket>> GetAllTicketsWithUserId(string userId)
+    public async Task<PagedResult<Ticket>> GetAllTicketsWithUserId(
+        string userId,
+        TicketQueryParameters query)
     {
-        return await _ticketRepository.GetAllTicketsWithUserId(userId);
+        return await _ticketRepository.GetAllTicketsWithUserId(
+            userId,
+            query);
+    }
+
+    public async Task<PagedResult<Ticket>> GetAllTicketsCreatedByUser(
+        string userId,
+        TicketQueryParameters query)
+    {
+        return await _ticketRepository.GetAllTicketsCreatedByUser(
+            userId,
+            query);
     }
 
     public async Task Update(UpdateTicketRequest request)

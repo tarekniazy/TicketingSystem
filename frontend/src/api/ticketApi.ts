@@ -1,5 +1,6 @@
 import axiosClient from './axiosClient';
 import { type Ticket, TicketCategory, TicketPriority, TicketStatus } from '../models/Ticket';
+import type { PagedResult } from '../models/PagedResult';
 
 export interface CreateTicketRequest {
   title: string;
@@ -26,11 +27,23 @@ export interface AssignTicketRequest {
   userId: string;
 }
 
+export interface TicketQueryParams {
+  search?: string;
+  priority?: TicketPriority;
+  status?: TicketStatus;
+  category?: TicketCategory;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
 export const getAllTickets = () =>
   axiosClient.get<Ticket[]>('/tickets');
 
-export const getTicketsForUser = (userId: string) =>
-  axiosClient.get<Ticket[]>(`/tickets/${userId}`);
+export const getTicketsForUser = (userId: string, params: TicketQueryParams) =>
+  axiosClient.get<PagedResult<Ticket>>(`/tickets/${userId}`, { params });
+
+export const getTicketsCreatedByUser = (userId: string, params: TicketQueryParams) =>
+  axiosClient.get<PagedResult<Ticket>>(`/tickets/created/${userId}`, { params });
 
 export const createTicket = (data: CreateTicketRequest) =>
   axiosClient.post('/tickets', data);

@@ -27,9 +27,42 @@ public class TicketsController : ControllerBase
 
     [HttpGet("{userId}")]
     public async Task<IActionResult> GetAllTicketsForUser(
-        string userId)
+        string userId,
+        [FromQuery] TicketQueryParameters query)
     {
-        return Ok(await _service.GetAllTicketsWithUserId(userId));
+        Normalize(query);
+
+        return Ok(
+            await _service.GetAllTicketsWithUserId(
+                userId,
+                query));
+    }
+
+    [HttpGet("created/{userId}")]
+    public async Task<IActionResult> GetAllTicketsCreatedByUser(
+        string userId,
+        [FromQuery] TicketQueryParameters query)
+    {
+        Normalize(query);
+
+        return Ok(
+            await _service.GetAllTicketsCreatedByUser(
+                userId,
+                query));
+    }
+
+    private static void Normalize(
+        TicketQueryParameters query)
+    {
+        if (query.PageNumber < 1)
+        {
+            query.PageNumber = 1;
+        }
+
+        if (query.PageSize is < 1 or > 100)
+        {
+            query.PageSize = 10;
+        }
     }
 
     [HttpPost]

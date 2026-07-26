@@ -15,11 +15,12 @@ import {
   Grid,
   CircularProgress,
   Alert,
+  Pagination,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
-import { getAllTickets, getTicketsForUser } from '../api/ticketApi';
+import { getTicketsForUser, getTicketsCreatedByUser } from '../api/ticketApi';
 import { type Ticket, TicketCategory, TicketPriority, TicketStatus, categoryLabel, priorityLabel, statusLabel } from '../models/Ticket';
 import TicketCard from '../components/TicketCard';
 import CreateTicketDialog from '../components/dialogs/CreateTicketDialog';
@@ -31,42 +32,63 @@ const PRIORITY_OPTIONS = [0, ...Object.values(TicketPriority).filter((v): v is n
 const STATUS_OPTIONS = [0, ...Object.values(TicketStatus).filter((v): v is number => typeof v === 'number')];
 const CATEGORY_OPTIONS = [0, ...Object.values(TicketCategory).filter((v): v is number => typeof v === 'number')];
 
+const PAGE_SIZE = 9;
+const SEARCH_DEBOUNCE_MS = 400;
+
 const HomePage: React.FC = () => {
   const { userId, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [tab, setTab] = useState(0);
-  const [allTickets, setAllTickets] = useState<Ticket[]>([]);
-  const [assignedTickets, setAssignedTickets] = useState<Ticket[]>([]);
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [filterPriority, setFilterPriority] = useState(0);
   const [filterStatus, setFilterStatus] = useState(0);
   const [filterCategory, setFilterCategory] = useState(0);
+  const [page, setPage] = useState(1);
 
   const [createOpen, setCreateOpen] = useState(false);
   const [detailsTicket, setDetailsTicket] = useState<Ticket | null>(null);
   const [editTicket, setEditTicket] = useState<Ticket | null>(null);
+
+  useEffect(() => {
+    const handle = setTimeout(() => setDebouncedSearch(search), SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(handle);
+  }, [search]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [tab, debouncedSearch, filterPriority, filterStatus, filterCategory]);
 
   const fetchTickets = useCallback(async () => {
     if (!userId) return;
     setLoading(true);
     setError('');
     try {
-      const [allRes, assignedRes] = await Promise.all([
-        getAllTickets(),
-        getTicketsForUser(userId),
-      ]);
-      setAllTickets(allRes.data);
-      setAssignedTickets(assignedRes.data);
+      const params = {
+        search: debouncedSearch || undefined,
+        priority: filterPriority || undefined,
+        status: filterStatus || undefined,
+        category: filterCategory || undefined,
+        pageNumber: page,
+        pageSize: PAGE_SIZE,
+      };
+      const res = tab === 0
+        ? await getTicketsForUser(userId, params)
+        : await getTicketsCreatedByUser(userId, params);
+      setTickets(res.data.items);
+      setTotalPages(res.data.totalPages || 1);
     } catch {
       setError('Failed to load tickets.');
     } finally {
       setLoading(false);
     }
-  }, [userId]);
+  }, [userId, tab, debouncedSearch, filterPriority, filterStatus, filterCategory, page]);
 
   useEffect(() => {
     fetchTickets();
@@ -76,17 +98,6 @@ const HomePage: React.FC = () => {
     logout();
     navigate('/login');
   };
-
-  const createdTickets = allTickets.filter((t) => t.createdById === userId);
-  const activeTickets = tab === 0 ? assignedTickets : createdTickets;
-
-  const filtered = activeTickets.filter((t) => {
-    if (search && !t.title.toLowerCase().includes(search.toLowerCase())) return false;
-    if (filterPriority && t.priority !== filterPriority) return false;
-    if (filterStatus && t.status !== filterStatus) return false;
-    if (filterCategory && t.category !== filterCategory) return false;
-    return true;
-  });
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'grey.100' }}>
@@ -178,7 +189,7 @@ const HomePage: React.FC = () => {
 
         {error && <Alert severity="error">{error}</Alert>}
 
-        {!loading && !error && filtered.length === 0 && (
+        {!loading && !error && tickets.length === 0 && (
           <Typography color="text.secondary" sx={{ textAlign: 'center', py: 6 }}>
             No tickets found.
           </Typography>
@@ -186,7 +197,7 @@ const HomePage: React.FC = () => {
 
         {!loading && (
           <Grid container spacing={3}>
-            {filtered.map((ticket) => (
+            {tickets.map((ticket) => (
               <Grid key={ticket.id} size={{ xs: 12, sm: 6, md: 4 }}>
                 <TicketCard
                   ticket={ticket}
@@ -196,6 +207,17 @@ const HomePage: React.FC = () => {
               </Grid>
             ))}
           </Grid>
+        )}
+
+        {!loading && !error && totalPages > 1 && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', pt: 4 }}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={(_, v) => setPage(v)}
+              color="primary"
+            />
+          </Box>
         )}
       </Box>
 
