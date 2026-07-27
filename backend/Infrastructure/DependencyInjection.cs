@@ -15,11 +15,11 @@ public static class DependencyInjection
 
         services.AddScoped<ITicketRepository,TicketRepository>();
 
-        services.AddScoped<IPasswordHasher,PasswordHasher>();
+        services.AddSingleton<IPasswordHasher,PasswordHasher>();
 
-        services.AddScoped<IJwtProvider,JwtProvider>();
+        services.AddSingleton<IJwtProvider,JwtProvider>();
 
-        services.AddScoped<IAuth0Provider,Auth0Provider>();
+        services.AddSingleton<IAuth0Provider,Auth0Provider>();
 
         return services;
     }

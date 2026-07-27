@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using TicketingSystem.Application.Interfaces.Repositories;
 using TicketingSystem.Domain.Entities;
 using TicketingSystem.Infrastructure.Persistence;
@@ -17,9 +18,7 @@ public class UserRepository : IUserRepository
 
     public async Task<List<User>> GetAll()
     {
-        return await _users
-            .Find(_ => true)
-            .ToListAsync();
+        return await _users.AsQueryable().ToListAsync();
     }
 
     public async Task<User?> GetById(

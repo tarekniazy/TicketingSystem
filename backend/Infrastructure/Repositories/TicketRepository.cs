@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using TicketingSystem.Application.DTOs.Common;
 using TicketingSystem.Application.DTOs.Tickets;
 using TicketingSystem.Application.Interfaces.Repositories;
@@ -21,17 +22,13 @@ public class TicketRepository : ITicketRepository
 
     public async Task<List<Ticket>> GetAll()
     {
-        return await _tickets
-            .Find(_ => true)
-            .ToListAsync();
+        return await _tickets.AsQueryable().ToListAsync();
     }
 
     public async Task<Ticket?> GetById(
         string id)
     {
-        return await _tickets
-            .Find(x => x.Id == id)
-            .FirstOrDefaultAsync();
+        return await _tickets.AsQueryable().Where(ticket => ticket.Id == id).FirstOrDefaultAsync();
     }
 
     public async Task Create(

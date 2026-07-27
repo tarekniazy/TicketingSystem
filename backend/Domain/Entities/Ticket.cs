@@ -25,14 +25,6 @@ public class Ticket
 
     public DateTime? UpdatedAt { get; private set; }
 
-    private Ticket()
-    {
-        Id = string.Empty;
-        Title = string.Empty;
-        Description = string.Empty;
-        CreatedById = string.Empty;
-    }
-
     public Ticket(
         string title,
         string description,
