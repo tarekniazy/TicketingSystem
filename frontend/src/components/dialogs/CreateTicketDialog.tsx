@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -24,6 +24,13 @@ interface FormValues {
   category: TicketCategory;
 }
 
+const emptyFormValues: FormValues = {
+  title: '',
+  description: '',
+  priority: TicketPriority.Medium,
+  category: TicketCategory.Bug,
+};
+
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -41,14 +48,18 @@ const CreateTicketDialog: React.FC<Props> = ({ open, onClose, onCreated }) => {
     reset,
     formState: { errors },
   } = useForm<FormValues>({
-    defaultValues: {
-      priority: TicketPriority.Medium,
-      category: TicketCategory.Bug,
-    },
+    defaultValues: emptyFormValues,
   });
 
+  useEffect(() => {
+    if (open) {
+      reset(emptyFormValues);
+      setError('');
+    }
+  }, [open, reset]);
+
   const handleClose = () => {
-    reset();
+    reset(emptyFormValues);
     setError('');
     onClose();
   };

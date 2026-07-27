@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import { getTicketsForUser, getTicketsCreatedByUser } from '../api/ticketApi';
 import { type Ticket, TicketCategory, TicketPriority, TicketStatus, categoryLabel, priorityLabel, statusLabel } from '../models/Ticket';
 import TicketCard from '../components/TicketCard';
@@ -37,7 +37,7 @@ const SEARCH_DEBOUNCE_MS = 400;
 
 const HomePage: React.FC = () => {
   const { userId, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { logout: auth0Logout } = useAuth0();
 
   const [tab, setTab] = useState(0);
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -96,7 +96,7 @@ const HomePage: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    auth0Logout({ logoutParams: { returnTo: `${window.location.origin}/login` } });
   };
 
   return (

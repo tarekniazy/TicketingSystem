@@ -27,18 +27,15 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddFluentValidationAutoValidation();
-
 builder.Services.AddValidatorsFromAssemblyContaining<SignUpRequestValidator>();
-builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDb"));
-
 builder.Services.AddSingleton<MongoDbContext>();
 
 builder.Services.AddScoped<AuthenticationService>();
-
 builder.Services.AddScoped<TicketService>();
 
 builder.Services.AddInfrastructure();
@@ -79,14 +76,6 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
-
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
 app.UseCors("FrontendPolicy");
 
 app.UseAuthentication();
@@ -94,7 +83,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.MapFallbackToFile("index.html");
 
 app.Run();

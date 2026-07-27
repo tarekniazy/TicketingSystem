@@ -9,29 +9,17 @@ namespace TicketingSystem.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection
-        AddInfrastructure(
-            this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        services.AddScoped<
-            IUserRepository,
-            UserRepository>();
+        services.AddScoped<IUserRepository,UserRepository>();
 
-        services.AddScoped<
-            ITicketRepository,
-            TicketRepository>();
+        services.AddScoped<ITicketRepository,TicketRepository>();
 
-        services.AddScoped<
-            IPasswordHasher,
-            PasswordHasher>();
+        services.AddScoped<IPasswordHasher,PasswordHasher>();
 
-        services.AddScoped<
-            IJwtProvider,
-            JwtProvider>();
+        services.AddScoped<IJwtProvider,JwtProvider>();
 
-        services.AddScoped<
-            IAuth0Provider,
-            Auth0Provider>();
+        services.AddScoped<IAuth0Provider,Auth0Provider>();
 
         return services;
     }

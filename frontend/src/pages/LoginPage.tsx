@@ -72,7 +72,10 @@ const LoginPage: React.FC = () => {
             fullWidth
             startIcon={<LockOutlinedIcon />}
             onClick={() =>
-              loginWithRedirect({ appState: { returnTo: '/auth/callback' } })
+              loginWithRedirect({
+                appState: { returnTo: '/auth/callback' },
+                authorizationParams: { prompt: 'select_account' },
+              })
             }
             sx={{ mb: 2 }}
           >
